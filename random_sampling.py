@@ -1,34 +1,29 @@
 import pandas as pd
-import os
 
-input_dir = "separated_datasets"
+input_file = "combined.csv"
 output_file = "sampled_500k_dataset.csv"
 
-# CSV files to use
-files = [
-    "BENIGN.csv",
-    "TFTP.csv",
-    "MSSQL.csv",
-    "NetBIOS.csv",
-    "UDP.csv"
-]
+# Read combined dataset
+df = pd.read_csv(input_file)
 
 sampled_parts = []
 
-for file in files:
-    path = os.path.join(input_dir, file)
+# Labels to sample
+labels = ["BENIGN", "TFTP", "UDP", "SSDP", "NTP"]
 
-    df = pd.read_csv(path)
+for label in labels:
+    label_df = df[df["Label"] == label]
 
     # Check if enough rows exist
-    if len(df) < 100000:
-        raise ValueError(f"{file} has only {len(df):,} rows. Cannot sample 100,000 rows.")
+    if len(label_df) < 100000:
+        raise ValueError(
+            f"{label} has only {len(label_df):,} rows. Cannot sample 100,000 rows."
+        )
 
-    sampled = df.sample(n=100000, random_state=42)
-
+    sampled = label_df.sample(n=100000, random_state=42)
     sampled_parts.append(sampled)
 
-    print(f"{file}: sampled {len(sampled):,} rows")
+    print(f"{label}: sampled {len(sampled):,} rows")
 
 # Combine all sampled data
 final_df = pd.concat(sampled_parts, ignore_index=True)
@@ -44,7 +39,7 @@ print("Final shape:", final_df.shape)
 
 # Show final class distribution
 print("\nFinal class distribution:")
-counts = final_df[" Label"].value_counts()
+counts = final_df["Label"].value_counts()
 
 for label, count in counts.items():
     percentage = count / len(final_df) * 100

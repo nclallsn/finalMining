@@ -20,24 +20,20 @@ WITH DuplicateRows AS
                    [Active_Mean], [Active_Std], [Active_Max], [Active_Min], [Idle_Mean], [Idle_Std], [Idle_Max], [Idle_Min], [Label]
                ORDER BY (SELECT NULL)
            ) AS rn
-    FROM [ddos_sampled_db].[dbo].[sampled_500k_dataset]
+    FROM [separate_labels_db].[dbo].[BENIGN]
+    --FROM [separate_labels_db].[dbo].[TFTP]
+    --FROM [separate_labels_db].[dbo].[MSSQL]
+    --FROM [separate_labels_db].[dbo].[NetBIOS]
+    --FROM [separate_labels_db].[dbo].[UDP]
+    --FROM [separate_labels_db].[dbo].[Syn]
+    --FROM [separate_labels_db].[dbo].[SNMP]
+    --FROM [separate_labels_db].[dbo].[DNS]
+    --FROM [separate_labels_db].[dbo].[LDAP]
+    --FROM [separate_labels_db].[dbo].[SSDP]
+    --FROM [separate_labels_db].[dbo].[NTP]
 )
 DELETE FROM DuplicateRows
 WHERE rn > 1;
-
--- Drop duplicate/redundant columns
-ALTER TABLE [ddos_sampled_db].[dbo].[sampled_500k_dataset]
-DROP COLUMN
-    Subflow_Fwd_Packets,
-    Subflow_Bwd_Packets,
-    Bwd_URG_Flags,
-    Fwd_Header_Length_1,
-    Fwd_Avg_Bytes_Bulk,
-    Fwd_Avg_Packets_Bulk,
-    Fwd_Avg_Bulk_Rate,
-    Bwd_Avg_Bytes_Bulk,
-    Bwd_Avg_Packets_Bulk,
-    Bwd_Avg_Bulk_Rate;
 
 -- Column name standardization
 -- Prints query that convert column header with capital letters to lower case

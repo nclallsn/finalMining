@@ -47,3 +47,20 @@ SELECT
 FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_NAME = 'combined'
 ORDER BY ORDINAL_POSITION;
+
+-- Removes constant column
+DECLARE @sql NVARCHAR(MAX);
+
+SELECT @sql =
+    STRING_AGG(
+        CAST(
+            'IF (SELECT COUNT(DISTINCT [' + name + ']) FROM sampled) <= 1
+                ALTER TABLE sampled DROP COLUMN [' + name + '];'
+            AS NVARCHAR(MAX)
+        ),
+        CHAR(13) + CHAR(10)
+    )
+FROM sys.columns
+WHERE object_id = OBJECT_ID('sampled');
+
+EXEC sp_executesql @sql;

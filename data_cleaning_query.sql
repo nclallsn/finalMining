@@ -22,26 +22,28 @@ WITH DuplicateRows AS
            ) AS rn
     FROM [separate_labels_db].[dbo].[BENIGN]
     --FROM [separate_labels_db].[dbo].[TFTP]
-    --FROM [separate_labels_db].[dbo].[MSSQL]
-    --FROM [separate_labels_db].[dbo].[NetBIOS]
     --FROM [separate_labels_db].[dbo].[UDP]
-    --FROM [separate_labels_db].[dbo].[Syn]
-    --FROM [separate_labels_db].[dbo].[SNMP]
-    --FROM [separate_labels_db].[dbo].[DNS]
-    --FROM [separate_labels_db].[dbo].[LDAP]
     --FROM [separate_labels_db].[dbo].[SSDP]
     --FROM [separate_labels_db].[dbo].[NTP]
 )
 DELETE FROM DuplicateRows
 WHERE rn > 1;
 
+-- Drop samples with null values
+DELETE FROM dbo.combined
+WHERE Flow_Duration IS NULL
+   OR Flow_Bytes_s IS NULL
+   OR Flow_Packets_s IS NULL
+   OR Flow_IAT_Mean IS NULL
+   OR Flow_IAT_Max IS NULL
+   OR Flow_IAT_Min IS NULL;
+
 -- Column name standardization
 -- Prints query that convert column header with capital letters to lower case
 SELECT
-    'EXEC sp_rename ''[ddos_sampled_db].[dbo].[sampled_500k_dataset].['
+    'EXEC sp_rename ''[combined_db].[dbo].[combined].['
     + COLUMN_NAME + ']'', '''
     + LOWER(COLUMN_NAME) + ''', ''COLUMN'';' AS rename_command
 FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = 'sampled_500k_dataset'
+WHERE TABLE_NAME = 'combined'
 ORDER BY ORDINAL_POSITION;
-

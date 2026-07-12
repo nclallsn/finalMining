@@ -1,0 +1,74 @@
+{
+  "model": "DecisionTree",
+  "random_state": 8,
+  "hyperparameters": {
+    "criterion": "entropy",
+    "max_depth": 15,
+    "min_samples_split": 50,
+    "min_samples_leaf": 1,
+    "max_features": null
+  },
+  "accuracy": 0.84785,
+  "balanced_accuracy": 0.84785,
+  "precision_macro": 0.8526815968298387,
+  "recall_macro": 0.84785,
+  "f1_macro": 0.8442446650955822,
+  "precision_weighted": 0.8526815968298388,
+  "recall_weighted": 0.84785,
+  "f1_weighted": 0.844244665095582,
+  "roc_auc_macro_ovr": 0.965324089875,
+  "roc_auc_weighted_ovr": 0.965324089875,
+  "matthews_corrcoef": 0.8135570188819417,
+  "cohen_kappa": 0.8098125,
+  "training_time_seconds": 7.918927800026722,
+  "inference_time_seconds_full_test_set": 0.030548900016583502,
+  "inference_time_ms_per_sample": 0.000305489000165835,
+  "model_size_mb": 0.17598247528076172,
+  "model_size_bytes": 184531,
+  "per_class_report": {
+    "BENIGN": {
+      "precision": 0.9984517031265607,
+      "recall": 0.99955,
+      "f1-score": 0.9990005496976663,
+      "support": 20000.0
+    },
+    "NTP": {
+      "precision": 0.997952047952048,
+      "recall": 0.99895,
+      "f1-score": 0.9984507746126936,
+      "support": 20000.0
+    },
+    "SSDP": {
+      "precision": 0.593074590195401,
+      "recall": 0.77245,
+      "f1-score": 0.6709809116376034,
+      "support": 20000.0
+    },
+    "TFTP": {
+      "precision": 0.9996997297567811,
+      "recall": 0.9988,
+      "f1-score": 0.9992496623480567,
+      "support": 20000.0
+    },
+    "UDP": {
+      "precision": 0.6742299131184031,
+      "recall": 0.4695,
+      "f1-score": 0.5535414271818905,
+      "support": 20000.0
+    },
+    "accuracy": 0.84785,
+    "macro avg": {
+      "precision": 0.8526815968298387,
+      "recall": 0.84785,
+      "f1-score": 0.8442446650955822,
+      "support": 100000.0
+    },
+    "weighted avg": {
+      "precision": 0.8526815968298388,
+      "recall": 0.84785,
+      "f1-score": 0.844244665095582,
+      "support": 100000.0
+    }
+  },
+  "n_features_used": 41
+}

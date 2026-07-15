@@ -122,3 +122,21 @@ SELECT
     COUNT(DISTINCT Label) AS Label
 FROM sampled;
 
+-- Check how many rows does each class have
+SELECT 
+    label_counts.label,
+    label_counts.total_rows
+FROM (
+    SELECT 
+        label,
+        COUNT(*) AS total_rows
+    FROM [dbo].[sampled_500k_dataset]
+    GROUP BY label
+) AS label_counts
+JOIN (
+    SELECT DISTINCT label
+    FROM [dbo].[sampled_500k_dataset]
+) AS distinct_labels
+    ON label_counts.label = distinct_labels.label
+ORDER BY label DESC;
+

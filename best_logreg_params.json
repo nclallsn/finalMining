@@ -1,5 +1,0 @@
-{
-  "C": 10,
-  "l1_ratio": 0,
-  "solver": "lbfgs"
-}

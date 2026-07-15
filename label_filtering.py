@@ -55,7 +55,7 @@ for label, original_count in label_counts.items():
 # Combine all selected labels into one DataFrame
 final_df = pd.concat(selected_dfs, ignore_index=True)
 
-output_file = "combined.csv"
+output_file = "top5_class.csv"
 final_df.to_csv(output_file, index=False)
 
 print(f"\nSaved {len(final_df):,} original rows to {output_file}")

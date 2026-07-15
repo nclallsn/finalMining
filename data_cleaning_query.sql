@@ -35,7 +35,6 @@ WHERE Flow_Duration IS NULL
    OR Flow_IAT_Min IS NULL;
 
 -- Column name standardization
--- Prints query that convert column header with capital letters to lower case
 SELECT
     'EXEC sp_rename ''[combined_db].[dbo].[combined].['
     + COLUMN_NAME + ']'', '''

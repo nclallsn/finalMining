@@ -1,7 +1,7 @@
 import pandas as pd
 
 input_file = "top5_class.csv"
-output_file = "sampled.csv"
+output_file = "sampled_500k_dataset.csv"
 
 # Read combined dataset
 df = pd.read_csv(input_file)

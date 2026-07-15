@@ -20,11 +20,7 @@ WITH DuplicateRows AS
                    [Active_Mean], [Active_Std], [Active_Max], [Active_Min], [Idle_Mean], [Idle_Std], [Idle_Max], [Idle_Min], [Label]
                ORDER BY (SELECT NULL)
            ) AS rn
-    FROM [separate_labels_db].[dbo].[BENIGN]
-    --FROM [separate_labels_db].[dbo].[TFTP]
-    --FROM [separate_labels_db].[dbo].[UDP]
-    --FROM [separate_labels_db].[dbo].[SSDP]
-    --FROM [separate_labels_db].[dbo].[NTP]
+    FROM combined
 )
 DELETE FROM DuplicateRows
 WHERE rn > 1;

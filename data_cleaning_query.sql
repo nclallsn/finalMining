@@ -50,7 +50,7 @@ SELECT @sql =
     STRING_AGG(
         CAST(
             'IF (SELECT COUNT(DISTINCT [' + name + ']) FROM top5_class) <= 1
-                ALTER TABLE sampled DROP COLUMN [' + name + '];'
+                ALTER TABLE top5_class DROP COLUMN [' + name + '];'
             AS NVARCHAR(MAX)
         ),
         CHAR(13) + CHAR(10)

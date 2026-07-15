@@ -20,15 +20,6 @@ SELECT
 	SUM(CASE WHEN Flow_IAT_Min IS NULL THEN 1 ELSE 0 END) AS Flow_IAT_Min
 FROM sampled
 
-SELECT Flow_Duration, COUNT(Flow_Duration) AS DuplicateCount
-FROM sampled
-GROUP BY
-    Flow_Duration
-HAVING COUNT(Flow_Duration) > 1;
-
-SELECT * FROM sampled
-WHERE Flow_Duration = 214105
-
 -- Check for duplicates
 SELECT *, COUNT(*) AS duplicate_count
 FROM sampled

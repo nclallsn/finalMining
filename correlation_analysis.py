@@ -4,24 +4,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.feature_selection import mutual_info_classif
 
-# ------------------------------------------------------
-# Step 0: Read the CSV and separate features from target
-# ------------------------------------------------------
-df = pd.read_csv("sampled.csv")  # replace with your actual file path
+df = pd.read_csv("sampled.csv")  
 
 # Separate features (X) from target (y)
-target_column = "label"  # replace with your actual target column name
+target_column = "label"  
 X = df.drop(columns=[target_column])
 y = df[target_column]
 
-# ------------------------------------------------------
-# Step 1: Compute the correlation matrix
-# ------------------------------------------------------
+# Compute the correlation matrix
 corr_matrix = X.corr().abs()
 
-# ------------------------------------------------------
-# Step 2: Visualize it as a heatmap
-# ------------------------------------------------------
+# Visualize it as a heatmap
 plt.figure(figsize=(20, 16))
 sns.heatmap(
     corr_matrix,
@@ -36,9 +29,7 @@ plt.yticks(rotation=0)
 plt.tight_layout()
 plt.show()
 
-# ------------------------------------------------------
-# Step 3: Identify highly correlated feature pairs (upper triangle only, avoids duplicates)
-# ------------------------------------------------------
+# Identify highly correlated feature pairs 
 upper = corr_matrix.where(
     np.triu(np.ones(corr_matrix.shape), k=1).astype(bool)
 )
@@ -55,9 +46,7 @@ high_corr_pairs = high_corr_pairs[high_corr_pairs["Correlation"] > threshold].so
 print("Highly correlated feature pairs (> 0.9):")
 print(high_corr_pairs)
 
-# ------------------------------------------------------
-# Step 4: Compute Mutual Information scores against the target
-# ------------------------------------------------------
+# Compute Mutual Information scores against the target
 print("\nComputing mutual information scores...")
 mi_scores = mutual_info_classif(X, y, random_state=42)
 mi_series = pd.Series(mi_scores, index=X.columns)
@@ -65,9 +54,7 @@ mi_series = pd.Series(mi_scores, index=X.columns)
 print("\nTop 15 features by mutual information:")
 print(mi_series.sort_values(ascending=False).head(15))
 
-# ------------------------------------------------------
-# Step 5: For each highly correlated pair, drop the one with LOWER mutual information
-# ------------------------------------------------------
+# For each highly correlated pair, drop the one with LOWER mutual information
 to_drop = set()
 
 for _, row in high_corr_pairs.iterrows():
@@ -87,11 +74,9 @@ X_reduced = X.drop(columns=to_drop)
 print(f"\nDropped {len(to_drop)} columns: {sorted(to_drop)}")
 print(f"Remaining columns: {X_reduced.shape[1]} (from original {X.shape[1]})")
 
-# ------------------------------------------------------
-# Step 6: Save the reduced dataset (features + target) to a new CSV
-# ------------------------------------------------------
+# Save the reduced dataset (features + target) to a new CSV
 df_reduced = X_reduced.copy()
-df_reduced[target_column] = y  # add the target column back in
+df_reduced[target_column] = y  
 
 output_filename = "sampled_reduced.csv"
 df_reduced.to_csv(output_filename, index=False)

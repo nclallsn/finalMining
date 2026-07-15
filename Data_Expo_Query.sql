@@ -1,14 +1,14 @@
 -- Count total rows
 SELECT COUNT(*) AS total_rows
-FROM [dbo].[sampled];
+FROM [dbo].[top5_class];
 
 -- Count total columns
 SELECT COUNT(*) AS total_col
 FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = 'sampled'
+WHERE TABLE_NAME = 'top5_class'
 
 -- View structure of the table
-EXEC sp_help 'sampled';
+EXEC sp_help 'top5_class';
 
 -- Check for missing values for columns with allowed NULL
 SELECT
@@ -18,11 +18,11 @@ SELECT
 	SUM(CASE WHEN Flow_IAT_Mean IS NULL THEN 1 ELSE 0 END) AS Flow_IAT_Mean,
 	SUM(CASE WHEN Flow_IAT_Max IS NULL THEN 1 ELSE 0 END) AS Flow_IAT_Max,
 	SUM(CASE WHEN Flow_IAT_Min IS NULL THEN 1 ELSE 0 END) AS Flow_IAT_Min
-FROM sampled
+FROM top5_class
 
 -- Check for duplicates
 SELECT *, COUNT(*) AS duplicate_count
-FROM sampled
+FROM top5_class
 GROUP BY
 	[Flow_Duration], [Total_Fwd_Packets], [Total_Backward_Packets], [Total_Length_of_Fwd_Packets], 
 	[Total_Length_of_Bwd_Packets], [Fwd_Packet_Length_Max], [Fwd_Packet_Length_Min], [Fwd_Packet_Length_Mean], 
@@ -120,7 +120,7 @@ SELECT
     COUNT(DISTINCT Idle_Max) AS Idle_Max,
     COUNT(DISTINCT Idle_Min) AS Idle_Min,
     COUNT(DISTINCT Label) AS Label
-FROM sampled;
+FROM top5_class;
 
 -- Check how many rows does each class have
 SELECT 
@@ -130,12 +130,12 @@ FROM (
     SELECT 
         label,
         COUNT(*) AS total_rows
-    FROM [dbo].[sampled_500k_dataset]
+    FROM [dbo].[top5_class_500k_dataset]
     GROUP BY label
 ) AS label_counts
 JOIN (
     SELECT DISTINCT label
-    FROM [dbo].[sampled_500k_dataset]
+    FROM [dbo].[top5_class_500k_dataset]
 ) AS distinct_labels
     ON label_counts.label = distinct_labels.label
 ORDER BY label DESC;

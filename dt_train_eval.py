@@ -1,8 +1,6 @@
 # Decision Tree classifier training and evaluation.
 
 import json
-import os
-import pickle
 import time
 import numpy as np
 import pandas as pd
@@ -50,12 +48,12 @@ default_params = {
 }
 
 dt_params = default_params.copy()
-if os.path.exists("best_dt_params.json"):
+try:
     with open("best_dt_params.json") as f:
         tuned_params = json.load(f)
     dt_params.update(tuned_params)
     print(f"\nLoaded tuned hyperparameters from 'best_dt_params.json': {tuned_params}")
-else:
+except FileNotFoundError:
     print("\nNo 'best_dt_params.json' found — using default hyperparameters. "
           "Run dt_hyperparameter_tuning.py first to tune them.")
 
@@ -79,15 +77,6 @@ print(f"Inference time (per sample): {inference_time_per_sample_ms:.4f} ms")
 y_proba = dt.predict_proba(X_test_reduced)
 
 classes = dt.classes_
-
-model_size_bytes = len(pickle.dumps(dt))
-model_size_mb = model_size_bytes / (1024 ** 2)
-print(f"Model size: {model_size_mb:.4f} MB ({model_size_bytes:,} bytes)")
-
-# Also persist the trained model to disk so it can be reused/deployed later
-with open(f"model_{MODEL_NAME}.pkl", "wb") as f:
-    pickle.dump(dt, f)
-print(f"Saved trained model to 'model_{MODEL_NAME}.pkl'")
 
 # Performance metrics
 accuracy = accuracy_score(y_test, y_pred)
@@ -136,7 +125,6 @@ print(f"Cohen's kappa:            {kappa:.4f}")
 print(f"Training time (s):        {train_time:.4f}")
 print(f"Inference time (s):       {inference_time:.4f}")
 print(f"Inference time/sample (ms): {inference_time_per_sample_ms:.4f}")
-print(f"Model size (MB):          {model_size_mb:.4f}")
 
 # Save all metrics to JSON
 metrics_summary = {
@@ -158,8 +146,6 @@ metrics_summary = {
     "training_time_seconds": train_time,
     "inference_time_seconds_full_test_set": inference_time,
     "inference_time_ms_per_sample": inference_time_per_sample_ms,
-    "model_size_mb": model_size_mb,
-    "model_size_bytes": model_size_bytes,
     "per_class_report": report_dict,
     "n_features_used": X_train_reduced.shape[1],
 }

@@ -20,13 +20,13 @@ WITH DuplicateRows AS
                    [Active_Mean], [Active_Std], [Active_Max], [Active_Min], [Idle_Mean], [Idle_Std], [Idle_Max], [Idle_Min], [Label]
                ORDER BY (SELECT NULL)
            ) AS rn
-    FROM combined
+    FROM top5_class
 )
 DELETE FROM DuplicateRows
 WHERE rn > 1;
 
 -- Drop samples with null values
-DELETE FROM dbo.combined
+DELETE FROM dbo.top5_class
 WHERE Flow_Duration IS NULL
    OR Flow_Bytes_s IS NULL
    OR Flow_Packets_s IS NULL
@@ -36,11 +36,11 @@ WHERE Flow_Duration IS NULL
 
 -- Column name standardization
 SELECT
-    'EXEC sp_rename ''[combined_db].[dbo].[combined].['
+    'EXEC sp_rename ''[8Fold_db].[dbo].[top5_class].['
     + COLUMN_NAME + ']'', '''
     + LOWER(COLUMN_NAME) + ''', ''COLUMN'';' AS rename_command
 FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = 'combined'
+WHERE TABLE_NAME = 'top5_class'
 ORDER BY ORDINAL_POSITION;
 
 -- Removes constant column
@@ -49,13 +49,13 @@ DECLARE @sql NVARCHAR(MAX);
 SELECT @sql =
     STRING_AGG(
         CAST(
-            'IF (SELECT COUNT(DISTINCT [' + name + ']) FROM sampled) <= 1
+            'IF (SELECT COUNT(DISTINCT [' + name + ']) FROM top5_class) <= 1
                 ALTER TABLE sampled DROP COLUMN [' + name + '];'
             AS NVARCHAR(MAX)
         ),
         CHAR(13) + CHAR(10)
     )
 FROM sys.columns
-WHERE object_id = OBJECT_ID('sampled');
+WHERE object_id = OBJECT_ID('top5_class');
 
 EXEC sp_executesql @sql;
